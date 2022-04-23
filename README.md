@@ -81,7 +81,40 @@ export const useRepoSearch  = (query: string) => {
 
 * I added two methods to the search component: 'handleSearch' and 'handleSubmit'. handleSearch is used in the input element to extract e.target.value of input and handleSubmit is triggered by button to update query and by that activate the swr hook.
 
+* As I received the data from the API I needed to display them in the table. I used react-table as a library to paginate and
+sort the data. I used chakra-ui code examples (pagination, and sorting) to implement the table. Then I styled the table to suit
+the style of the app.
 
+* The official react-table documentation requested to use useMemo for the table data memoizing. 
+I created header data with accessors:
+
+```
+const columns = useMemo(() => [
+    {Header: "Name", accessor: "name"},
+    {Header: "Owner", accessor: "owner"},
+    {Header: "Stars", accessor: "stars"},
+    {Header: "Created At", accessor: "created_at"},
+], []);
+```
+
+also the data coming into the table as an object using accessors as a keys:
+
+```
+const tableData = useMemo(() => {
+    if (data && data.items) {
+    return data.items.map((item: any) => {
+        return {
+            name: item.name,
+            owner: item.owner.login,
+            stars: item.stargazers_count,
+            created_at: item.created_at
+        }
+    })} else {
+        return [];
+    }
+    }, [data])
+```
+* If there will be an error the Search component should show the message. Else it should show the table.
 
 
 

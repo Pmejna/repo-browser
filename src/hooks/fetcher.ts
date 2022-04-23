@@ -9,6 +9,6 @@ export default function fetcher(url: string, data = undefined) {
         }
         return res.json()
     }).catch((e) => {
-        throw new Error();
+        throw new Error(e);
     })
 }
