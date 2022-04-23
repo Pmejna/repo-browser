@@ -165,5 +165,5 @@ And implemented that in the SWRConfig. I added two more helpful options to the c
 
 This way the data will be fetched from the localStorage if it is there. And no additional request will be made to the API.
 
-
+* next I tidied up the code a little bit. I removed as well warnings which could cause an issue with the CI (missing dependencies in useEffect, value never used and so on...).
 

@@ -1,8 +1,12 @@
-import { Box, Button, Input, InputGroup, InputLeftElement, Text, useColorMode } from "@chakra-ui/react";
+import { Box, Input, InputGroup, InputLeftElement, Text } from "@chakra-ui/react";
 import { FunctionComponent, useEffect, useMemo, useState} from "react";
 import {MdSearch} from 'react-icons/md';
 import { useRepoSearch } from "../../hooks/hooks";
 import CustomTablePaginated from "./CustomTable";
+import dayjs from "dayjs";
+import customParseFormat from 'dayjs/plugin/customParseFormat'
+import { tableData } from "../../types/data";
+
 
 interface SearchProps {
     searchTermFromURL: string;
@@ -14,23 +18,38 @@ const Search: FunctionComponent<SearchProps> = ({searchTermFromURL}) => {
     const [shouldFetch, setShouldFetch] = useState(searchTerm === '' ? false : true);
     const { data, isError, isLoading } = useRepoSearch(shouldFetch, query);
     
+    const handleSubmit = () => {
+        setShouldFetch(true)
+        window.history.replaceState(null, '', `/${searchTerm}`)
+    }
+
+    const delayDebounceFn = setTimeout(() => {
+        handleSubmit();
+      }, 350)
+
+    const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setSearchTerm(e.target.value);
+        setQuery(`q=${e.target.value}&sort=stars&order=desc&page=1&per_page=100`)
+        setShouldFetch(false);
+    }
+    
+    dayjs.extend(customParseFormat);
+    const formatDate = (date: string) => {
+        return dayjs(`${date}`).format('DD-MM-YYYY');
+    }
+
     useEffect(() => {
-        const delayDebounceFn = setTimeout(() => {
-            handleSubmit();
-          }, 350)
-      
           return () => clearTimeout(delayDebounceFn)
-        
-    }, [searchTerm]);
+    }, [searchTerm, delayDebounceFn]);
 
     const tableData = useMemo(() => {
         if (data && data.items) {
-            return data.items.map((item: any) => {
+            return data.items.map((item: any): tableData => {
                 return {
                     name: item.name,
                     owner: item.owner.login,
                     stars: item.stargazers_count,
-                    created_at: item.created_at
+                    created_at: formatDate(item.created_at),
                 }
             })} else {
                 return [];
@@ -38,26 +57,25 @@ const Search: FunctionComponent<SearchProps> = ({searchTermFromURL}) => {
         }, [data])
         
     const columns = useMemo(() => [
-        {Header: "Name", accessor: "name"},
-        {Header: "Owner", accessor: "owner"},
-        {Header: "Stars", accessor: "stars"},
-        {Header: "Created At", accessor: "created_at"},
+        {
+            Header: "Name", 
+            accessor: "name"
+        },
+        {
+            Header: "Owner", 
+            accessor: "owner"
+        },
+        {
+            Header: "Stars", 
+            accessor: "stars"
+        },
+        {
+            Header: "Created At", 
+            accessor: "created_at"
+        },
     ], []);
 
-    const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setSearchTerm(e.target.value);
-        setQuery(`q=${e.target.value}&sort=stars&order=desc&page=1&per_page=100`)
-        setShouldFetch(false);
-    }
-
-    const handleSubmit = () => {
-        setShouldFetch(true)
-        window.history.replaceState(null, '', `/${searchTerm}`)
-    }
     
-    console.log(data)
-    const {colorMode} = useColorMode();
-
     return ( 
         <Box>
             <Box>
@@ -82,7 +100,7 @@ const Search: FunctionComponent<SearchProps> = ({searchTermFromURL}) => {
                     )
                 }
                 {
-                    data.items?.length == 0 ? (
+                    data.items?.length === 0 ? (
                         <Text>
                             {
                              isError && `We apologize for the inconveniences: an error have occurred.`

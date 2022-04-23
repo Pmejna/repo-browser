@@ -36,9 +36,10 @@ import {
     UsePaginationState, 
     useSortBy 
   } from "react-table";
+import { tableData } from "../../types/data";
   
   interface CustomTablePaginatedProps {
-      data: any
+      data: tableData[] | []
       isLoading: boolean
       columns: any
       numberOfItems: number
