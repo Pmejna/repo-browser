@@ -6,7 +6,7 @@ import Search from "../components/common/Search";
 const Home: FunctionComponent = () => {
 
     const params = useLocation();
-    const [urlParams, setUrlParams] = useState(params.search.substring(1));
+    const [urlParams] = useState(params.search.substring(1));
         
     const {colorMode} = useColorMode();
     return ( 
