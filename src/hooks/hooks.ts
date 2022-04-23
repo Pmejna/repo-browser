@@ -1,11 +1,11 @@
 import useSWR from "swr"
 import fetcher from "./fetcher"
 
-export const useRepoSearch  = (query: string) => {
-    const {data, error} = useSWR(`https://api.github.com/search/repositories?${query}`, fetcher)
+export const useRepoSearch  = (shouldFetch: boolean, query: string) => {
+    const {data, error} = useSWR(!shouldFetch ? null : `https://api.github.com/search/repositories?${query}`, fetcher)
     return {
         data: (data as any) || [],
-        isLoading: !data && !error,
+        isLoading: !data && !error && shouldFetch,
         isError: error
     }
 }

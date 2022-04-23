@@ -79,9 +79,91 @@ export const useRepoSearch  = (query: string) => {
 }
 ```
 
+* I added two methods to the search component: 'handleSearch' and 'handleSubmit'. handleSearch is used in the input element to extract e.target.value of input and handleSubmit is triggered by button to update query and by that activate the swr hook.
 
+* As I received the data from the API I needed to display them in the table. I used react-table as a library to paginate and
+sort the data. I used chakra-ui code examples (pagination, and sorting) to implement the table. Then I styled the table to suit
+the style of the app.
 
+* The official react-table documentation requested to use useMemo for the table data memoizing. 
+I created header data with accessors:
 
+```
+const columns = useMemo(() => [
+    {Header: "Name", accessor: "name"},
+    {Header: "Owner", accessor: "owner"},
+    {Header: "Stars", accessor: "stars"},
+    {Header: "Created At", accessor: "created_at"},
+], []);
+```
+
+also the data coming into the table as an object using accessors as a keys:
+
+```
+const tableData = useMemo(() => {
+    if (data && data.items) {
+    return data.items.map((item: any) => {
+        return {
+            name: item.name,
+            owner: item.owner.login,
+            stars: item.stargazers_count,
+            created_at: item.created_at
+        }
+    })} else {
+        return [];
+    }
+    }, [data])
+```
+* If there will be an error, or no results the Search component should show the message. Else it should show the table.
+
+* The next important feature is to update url address with the query elements.
+In the Home page I added the reactRouter hook and useState: 
+```
+const params = useLocation();
+const [urlParams, setUrlParams] = useState(params.search.substring(1));
+```
+I am passing the urlParams to the Search component as a prop:
+
+```
+<Box >
+    <Search searchTermFromURL={urlParams}/>
+</Box>
+```
+
+Inside of the Search component I initialize the searchTerm with it. This way when page is opened with params in the url it will search
+for the query:
+
+```
+const [searchTerm, setSearchTerm] = useState(searchTermFromURL);
+```
+
+* Now is time to implement the search functionality without a button I removed the SearchButton and I used the debounce function to limit the number of requests to the API.
+The debounce function is firing up in the useEffect hook, triggered by searchTerm. This way the page will load the data in the
+initial load and when the user types something in the search bar it will fire up the debounce function and wait for 350ms.
+My use effect:
+```
+useEffect(() => {
+    const delayDebounceFn = setTimeout(() => {
+        handleSubmit();
+        }, 350)
+    
+        return () => clearTimeout(delayDebounceFn)
+    
+}, [searchTerm]);
+```
+
+* In the meantime I realized that my swr calls are still triggered when the user types the previous query. 
+First I created the SWRConfig wrapper in the index.tsx file. Then based on official swr documentation I created localStorageProvider.
+And implemented that in the SWRConfig. I added two more helpful options to the config:
+
+```
+<SWRConfig value={{ provider: localStorageProvider, revalidateIfStale: false, revalidateOnFocus: false }}>
+    <ColorModeScript initialColorMode={theme.config.initialColorMode} />
+    <App />
+</SWRConfig>
+```
+
+This way the data will be fetched from the localStorage if it is there. And no additional request will be made to the API.
 
 
 

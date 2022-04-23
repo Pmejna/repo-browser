@@ -1,8 +1,12 @@
 import { Box, Text, useColorMode } from "@chakra-ui/react";
-import { FunctionComponent } from "react";
+import { FunctionComponent, useState } from "react";
+import { useLocation } from "react-router-dom";
 import Search from "../components/common/Search";
 
 const Home: FunctionComponent = () => {
+
+    const params = useLocation();
+    const [urlParams, setUrlParams] = useState(params.search.substring(1));
         
     const {colorMode} = useColorMode();
     return ( 
@@ -25,7 +29,7 @@ const Home: FunctionComponent = () => {
                 </Text>
             </Box>
             <Box >
-                <Search />
+                <Search searchTermFromURL={urlParams}/>
             </Box>
         </Box>
      );

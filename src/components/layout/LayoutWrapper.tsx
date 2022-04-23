@@ -38,7 +38,13 @@ const LayoutWrapper: FunctionComponent<LayoutWrapperProps> = ({children}) => {
                     <GridItem >
                         <Flex align="center">
                             <VscGithubInverted fontSize="23" />
-                            <Text fontWeight="bold" marginLeft="12px" fontSize="2xl">RepoBrowser</Text> 
+                            <Text 
+                                fontWeight="bold" 
+                                marginLeft="12px" 
+                                fontSize="2xl"
+                            >
+                                RepoBrowser
+                            </Text> 
                         </Flex>
                     </GridItem>
                     <GridItem textAlign="end">
