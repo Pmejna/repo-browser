@@ -40,7 +40,7 @@ const Search: FunctionComponent<SearchProps> = ({searchTermFromURL}) => {
     useEffect(() => {
         const delayDebounceFn = setTimeout(() => {
             memoizedHandleSubmit();
-          }, 350)
+          }, 500)
       
           return () => clearTimeout(delayDebounceFn)
     }, [searchTerm, memoizedHandleSubmit]);

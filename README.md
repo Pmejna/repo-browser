@@ -175,6 +175,8 @@ This way the data will be fetched from the localStorage if it is there. And no a
 * Last but not least I fixed a bug with API calls being called after every keystroke. Added the useMemo wrapper to handleSubmit.
   I adjusted as well some mobile styles.
 
+* I have changed the callback interval in the 500ms as the 350 was too small in the mobile UX.
+
 * At this point there is one important feature to implement: adding the sorting params to the url. And consuming them in the Search component. 
 In the end I din't find the use for Redux or other state management. If the app grow and will need more features I might consider
 using useReducer or useContext. 
