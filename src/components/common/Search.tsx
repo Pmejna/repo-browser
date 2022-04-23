@@ -1,6 +1,7 @@
-import { Box, Input, InputGroup, InputLeftElement, Text } from "@chakra-ui/react";
-import { FunctionComponent, useCallback, useEffect, useMemo, useState} from "react";
+import { Box, Input, InputGroup, InputLeftElement, InputRightElement, Text } from "@chakra-ui/react";
+import { FunctionComponent, useCallback, useEffect, useMemo, useRef, useState} from "react";
 import {MdSearch} from 'react-icons/md';
+import { TiDelete } from "react-icons/ti";
 import { useRepoSearch } from "../../hooks/hooks";
 import CustomTablePaginated from "./CustomTable";
 import dayjs from "dayjs";
@@ -17,6 +18,7 @@ const Search: FunctionComponent<SearchProps> = ({searchTermFromURL}) => {
     const [query, setQuery] = useState(`q=${searchTerm}&sort=stars&order=desc&page=1&per_page=100`);
     const [shouldFetch, setShouldFetch] = useState(false);
     const { data, isError, isLoading } = useRepoSearch(shouldFetch, query);
+    let inputRef = useRef() as React.MutableRefObject<HTMLInputElement>;
 
     const memoizedHandleSubmit = useCallback(
         () => {
@@ -31,6 +33,14 @@ const Search: FunctionComponent<SearchProps> = ({searchTermFromURL}) => {
         setSearchTerm(`?${e.target.value}`);
         setQuery(`q=${e.target.value}&sort=stars&order=desc&page=1&per_page=100`)
     }
+
+    const resetSearch = () => {
+        inputRef.current.value = "";
+        setShouldFetch(false);
+        setSearchTerm("");
+        setQuery(``)
+    }
+
     
     dayjs.extend(customParseFormat);
     const formatDate = (date: string) => {
@@ -95,10 +105,16 @@ const Search: FunctionComponent<SearchProps> = ({searchTermFromURL}) => {
                             pointerEvents='none'
                             children={<MdSearch color='gray.300' />}
                         />
+                        <InputRightElement
+                            onClick={() => resetSearch()}
+                            children={<TiDelete />}
+                            sx={{ cursor: 'pointer', color: 'red.500', fontSize: '1.2rem' }}
+                        />
                         <Input 
                             type='text' 
                             placeholder='Search Github repositories'
                             onChange={(e) => handleSearch(e)} 
+                            ref={inputRef}
                             onKeyPress={(e) => { e.key === 'Enter' && e.preventDefault(); }}
                         />
                     </InputGroup>
