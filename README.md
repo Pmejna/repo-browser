@@ -79,6 +79,10 @@ export const useRepoSearch  = (query: string) => {
 }
 ```
 
+* I added two methods to the search component: 'handleSearch' and 'handleSubmit'. handleSearch is used in the input element to extract e.target.value of input and handleSubmit is triggered by button to update query and by that activate the swr hook.
+
+
+
 
 
 
