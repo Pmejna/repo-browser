@@ -1,5 +1,5 @@
 import { Box, Input, InputGroup, InputLeftElement, Text } from "@chakra-ui/react";
-import { FunctionComponent, useEffect, useMemo, useState} from "react";
+import { FunctionComponent, useCallback, useEffect, useMemo, useState} from "react";
 import {MdSearch} from 'react-icons/md';
 import { useRepoSearch } from "../../hooks/hooks";
 import CustomTablePaginated from "./CustomTable";
@@ -15,22 +15,21 @@ interface SearchProps {
 const Search: FunctionComponent<SearchProps> = ({searchTermFromURL}) => {
     const [searchTerm, setSearchTerm] = useState(searchTermFromURL ? `?${searchTermFromURL}` : "");
     const [query, setQuery] = useState(`q=${searchTerm}&sort=stars&order=desc&page=1&per_page=100`);
-    const [shouldFetch, setShouldFetch] = useState(searchTerm === '' ? false : true);
+    const [shouldFetch, setShouldFetch] = useState(false);
     const { data, isError, isLoading } = useRepoSearch(shouldFetch, query);
-    
-    const handleSubmit = () => {
-        setShouldFetch(true)
-        window.history.replaceState(null, '', `/${searchTerm}`)
-    }
 
-    const delayDebounceFn = setTimeout(() => {
-        handleSubmit();
-      }, 350)
+    const memoizedHandleSubmit = useCallback(
+        () => {
+            setShouldFetch(true)
+            window.history.replaceState(null, '', `/${searchTerm}`)
+        },
+        [searchTerm],
+      );
 
     const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setSearchTerm(e.target.value);
-        setQuery(`q=${e.target.value}&sort=stars&order=desc&page=1&per_page=100`)
         setShouldFetch(false);
+        setSearchTerm(`?${e.target.value}`);
+        setQuery(`q=${e.target.value}&sort=stars&order=desc&page=1&per_page=100`)
     }
     
     dayjs.extend(customParseFormat);
@@ -39,8 +38,12 @@ const Search: FunctionComponent<SearchProps> = ({searchTermFromURL}) => {
     }
 
     useEffect(() => {
+        const delayDebounceFn = setTimeout(() => {
+            memoizedHandleSubmit();
+          }, 350)
+      
           return () => clearTimeout(delayDebounceFn)
-    }, [searchTerm, delayDebounceFn]);
+    }, [searchTerm, memoizedHandleSubmit]);
 
     const tableData = useMemo(() => {
         if (data && data.items) {
@@ -50,6 +53,7 @@ const Search: FunctionComponent<SearchProps> = ({searchTermFromURL}) => {
                     owner: item.owner.login,
                     stars: item.stargazers_count,
                     created_at: formatDate(item.created_at),
+                    link: item.html_url
                 }
             })} else {
                 return [];
@@ -70,11 +74,17 @@ const Search: FunctionComponent<SearchProps> = ({searchTermFromURL}) => {
             accessor: "stars"
         },
         {
+            Header: "Link", 
+            accessor: "link",
+            Cell: (e: any) => <a rel="noreferrer" target="_blank" href={e.value}>Click</a>
+        },
+        {
             Header: "Created At", 
             accessor: "created_at"
         },
     ], []);
 
+    console.log(data, 'dds')
     
     return ( 
         <Box>
@@ -88,7 +98,8 @@ const Search: FunctionComponent<SearchProps> = ({searchTermFromURL}) => {
                         <Input 
                             type='text' 
                             placeholder='Search Github repositories'
-                            onChange={(e) => handleSearch(e)} onKeyPress={(e) => { e.key === 'Enter' && e.preventDefault(); }}
+                            onChange={(e) => handleSearch(e)} 
+                            onKeyPress={(e) => { e.key === 'Enter' && e.preventDefault(); }}
                         />
                     </InputGroup>
                 </form>

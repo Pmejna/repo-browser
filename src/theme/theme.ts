@@ -6,7 +6,7 @@ export const theme = extendTheme({
         useSystemColorMode: true,
     },
     breakpoints: {
-        sx: "300px",
+        sx: "20em",
         sm: '30em',
         md: '48em',
         lg: '62em',

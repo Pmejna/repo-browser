@@ -109,10 +109,11 @@ import { tableData } from "../../types/data";
                                 background="gray.900" 
                                 color="gray.100"
                             >
-                                Github repository 
+                                Github repositories:
                                 <Text 
                                     as="span" 
                                     color="blue.500"
+                                    mx="0.4rem"
                                 >
                                     {numberOfItems ? numberOfItems : 0}
                                 </Text> 
@@ -126,10 +127,10 @@ import { tableData } from "../../types/data";
                             {
                             headerGroup.headers.map((column, index) => (
                             <Th 
-                                textAlign={index === 3 ? 'end' : 'start'}
+                                textAlign={index === 4 ? 'end' : 'start'}
                                 fontSize="md" color={"#fff"}
                                 {...column.getHeaderProps(column.getSortByToggleProps())}>
-                                <Flex justifyContent={index === 3 ? 'flex-end' : 'flex-start'}>
+                                <Flex justifyContent={index === 4 ? 'flex-end' : 'flex-start'}>
                                 {column.render("Header")}
                                 {column.isSorted ? (
                                     column.isSortedDesc ? (
@@ -153,7 +154,7 @@ import { tableData } from "../../types/data";
                             <Tr {...row.getRowProps()}>
                             {row.cells.map((cell, index) => {
                                 return (
-                                <Td textAlign={index === 3 ? 'end' : 'start'}{...cell.getCellProps()}>{cell.render("Cell")}</Td>
+                                <Td textAlign={index === 4 ? 'end' : 'start'}{...cell.getCellProps()}>{cell.render("Cell")}</Td>
                                 );
                             })}
                             </Tr>
