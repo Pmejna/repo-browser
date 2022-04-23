@@ -1,4 +1,6 @@
 import { extendTheme} from "@chakra-ui/react";
+import { mode } from '@chakra-ui/theme-tools';
+
 
 export const theme = extendTheme({
     config: {
@@ -24,7 +26,7 @@ export const theme = extendTheme({
             700: "#226691",
             800: "#215480",
             900: "#21216F",
-    },
+      },
     },
     components: {
       Button: {
@@ -53,6 +55,24 @@ export const theme = extendTheme({
                 }
           }
       }
+    },
+    styles: {
+      global: (props: any) =>  ({
+        'body, html': {
+          overflowX: 'hidden',
+        },
+        '::-webkit-scrollbar': {
+          width: '1rem',
+          backgroundColor: mode('gray.200', 'whiteAlpha.700')(props),
+        },
+        /* the buttons on the scrollbar (arrows pointing upwards and downwards). */
+        '::-webkit-scrollbar-thumb': {
+            backgroundColor: mode('brandPrimary.500', 'brandPrimary.700')(props),
+        },
+        '::-webkit-scrollbar-thumb:hover': {
+            background: mode('brandPrimary.700', 'brandPrimary.500', )(props),
+        },
+      }),
     }
   }
 );

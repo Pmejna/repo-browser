@@ -103,12 +103,13 @@ const Search: FunctionComponent<SearchProps> = ({searchTermFromURL}) => {
                     <InputGroup width={"100%"}>
                         <InputLeftElement
                             pointerEvents='none'
-                            children={<MdSearch color='gray.300' />}
+                            children={<MdSearch  />}
+                            sx={{color: 'gray.500', fontSize: '1.2rem'}}
                         />
                         <InputRightElement
                             onClick={() => resetSearch()}
                             children={<TiDelete />}
-                            sx={{ cursor: 'pointer', color: 'red.500', fontSize: '1.2rem' }}
+                            sx={{ cursor: 'pointer', color: 'red.500', fontSize: '1.5rem' }}
                         />
                         <Input 
                             type='text' 
