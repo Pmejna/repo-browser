@@ -1,8 +1,29 @@
-# Getting Started with Create React App
+# Simple Github Repository Browser
+This project is (as the title suggests) a simple Github Repository Browser.
+I have used create-react-app to start this project. Currently it install the version 18.0.0 of React.
+The first thing I did was to step down to the version 17.0.2. The reason for this is that I am aware
+of some incompatibilities between many libraries/dependencies with react v 18.0.0. To avoid further issues
+I have used the version 17.0.2.
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Libraries/dependencies
+I selected the following libraries/dependencies for this project:
 
-## Available Scripts
+* [react](https://reactjs.org/) - main library for this SPA
+* Typescript (for type checking)
+* [react-router-dom v6](https://reactrouter.com/) - the routing library, as the app might get bigger it gives a lot of options has useful build-in hooks
+* [chakra-ui](https://chakra-ui.com/) - My main choice for styling, build-in dark/light mode, good selection of components, it use @emotion/core. I am familiar as well with MaterialUI and StyledComponents. But I gave a go this one.
+* [swr](https://swr.now.sh/) - the library I used to help with data fetching from the API. Supports session storage and caching data
+* [react-table](https://react-table.js.org/) - my selection for the table pagination, sorting and filtering. Lot of options, tons of hooks to implement if needed in the future. 
+* [react-icons](https://react-icons.github.io/) - a great icon library to jumpstart the project with. 
+
+This app is a simple project. Some of the libraries might be an overkill, but might be helpful to speed up the development process.
+I believe this is a good project baseline. 
+
+## Other decisions
+* State: at this point state will be allocated inside the Search component. Any state related to the API might be shared
+between the components and pages using SWR hooks. I might implement redux store and reducers to handle the state if I find a use for it.
+
+## How to use this project
 
 In the project directory, you can run:
 
@@ -11,36 +32,56 @@ In the project directory, you can run:
 Runs the app in the development mode.\
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## My process journal
 
-### `npm test`
+Down Below is my journal for this project. You can see the process I took, also I would like to justify some of my decisions.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+* My first step was to create template layout - it can be easily modified to suit the needs of the project.
+  The layout is set inside of the react Route in App.tsx, thanks to Outlet all children passed down this Route can be rendered within it.
+  It is a simple wrapper consisting of a header with title and dark/light mode button.
 
-### `npm run build`
+* At the moment only Home page is implemented. The Home page is the main page of the app. Inside of it should be a search bar with a button and a table with the results.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+* Next step will be implement swr and create the hook for data fetching.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+I needed fetcher function, and hooks.ts file for our custom swr hook.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+My fetcher look like this:
+```
+export default function fetcher(url: string, data = undefined) {
+    return fetch(`${url}`, {
+        method: 'GET',
+        body: JSON.stringify(data),
+    }
+    ).then((res) => {
+        if (res.status > 399 && res.status < 200) {
+            throw new Error();
+        }
+        return res.json()
+    }).catch((e) => {
+        throw new Error();
+    })
+}
+```
 
-### `npm run eject`
+The hook:
+``` 
+import useSWR from "swr"
+import fetcher from "./fetcher"
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+export const useRepoSearch  = (query: string) => {
+    const {data, error} = useSWR(`https://api.github.com/search/repositories?${query}`, fetcher)
+    return {
+        data: (data as any) || [],
+        isLoading: !data && !error,
+        isError: error
+    }
+}
+```
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
 
-## Learn More
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+
