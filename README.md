@@ -190,6 +190,8 @@ I haven't used the environment variables. I could see couple of use cases:
 * there might be a need to use the API keys.
 * some features might be different in the dev mode and in the production mode. (implementing recaptcha for example) 
 
+Unit Testing is missing (Jest)
+I could use more types accross the board.
 
 Features I would like to add:
 * sorted table would stay the same after refresh/reload. I would add the params to the url.
