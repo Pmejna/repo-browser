@@ -25,7 +25,7 @@ const Home: FunctionComponent = () => {
                     fontSize="md" 
                     fontWeight="light"
                 >
-                    Enter github repository name and click search to get results
+                    Enter github repository name and wait for results
                 </Text>
             </Box>
             <Box >
