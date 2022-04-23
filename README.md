@@ -23,14 +23,19 @@ I believe this is a good project baseline.
 * State: at this point state will be allocated inside the Search component. Any state related to the API might be shared
 between the components and pages using SWR hooks. I might implement redux store and reducers to handle the state if I find a use for it.
 
+## Live preview
+Open [https://voluble-begonia-3f1bed.netlify.app/](https://voluble-begonia-3f1bed.netlify.app/)
+
 ## How to use this project
 
 In the project directory, you can run:
+
 
 ### `npm start`
 
 Runs the app in the development mode.\
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+
 
 ## My process journal
 
@@ -167,3 +172,27 @@ This way the data will be fetched from the localStorage if it is there. And no a
 
 * next I tidied up the code a little bit. I removed as well warnings which could cause an issue with the CI (missing dependencies in useEffect, value never used and so on...).
 
+* Last but not least I fixed a bug with API calls being called after every keystroke. Added the useMemo wrapper to handleSubmit.
+  I adjusted as well some mobile styles.
+
+* At this point there is one important feature to implement: adding the sorting params to the url. And consuming them in the Search component. 
+In the end I din't find the use for Redux or other state management. If the app grow and will need more features I might consider
+using useReducer or useContext. 
+
+## My thoughts and future improvements
+
+So far this was fun project to work on. I worked first time with react-table and couple of other small libraries.
+
+There is a few important bits missing: 
+
+I haven't used the environment variables. I could see couple of use cases:
+* there might be multiple url's patterns.
+* there might be a need to use the API keys.
+* some features might be different in the dev mode and in the production mode. (implementing recaptcha for example) 
+
+
+Features I would like to add:
+* sorted table would stay the same after refresh/reload. I would add the params to the url.
+* github profile search. 
+* github profile preview. 
+* github profile account activity comparison.

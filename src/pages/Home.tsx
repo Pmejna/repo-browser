@@ -10,7 +10,7 @@ const Home: FunctionComponent = () => {
         
     const {colorMode} = useColorMode();
     return ( 
-        <Box marginTop="1rem" paddingX={{sm: "1rem", md: "5rem"}}>
+        <Box marginTop="1rem" paddingX={{sx: "2rem", md: "5rem"}}>
             <Box marginBottom="0.8rem">
                 <Text 
                     as="h1" 

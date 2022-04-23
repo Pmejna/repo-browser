@@ -17,7 +17,7 @@ const LayoutWrapper: FunctionComponent<LayoutWrapperProps> = ({children}) => {
                 direction="row"
                 align="space-between"
                 justify="center"
-                paddingX={{sm: '1rem', md: '5rem'}}
+                paddingX={{sx: '1rem', md: '5rem'}}
                 sx={{
                     backgroundColor: `${colorMode === "dark" ? "gray.900": "gray.100"}`,
                     color: `${colorMode === "dark" ? "gray.100": "gray.900"}`,
