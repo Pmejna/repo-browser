@@ -17,7 +17,11 @@ I selected the following libraries/dependencies for this project:
 * [react-icons](https://react-icons.github.io/) - a great icon library to jumpstart the project with. 
 
 This app is a simple project. Some of the libraries might be an overkill, but might be helpful to speed up the development process.
-I believe this is a good project baseline. I might implement Redux if I will find a use for it.
+I believe this is a good project baseline. 
+
+## Other decisions
+* State: at this point state will be allocated inside the Search component. Any state related to the API might be shared
+between the components and pages using SWR hooks. I might implement redux store and reducers to handle the state if I find a use for it.
 
 ## How to use this project
 
@@ -38,7 +42,45 @@ Down Below is my journal for this project. You can see the process I took, also 
 
 * At the moment only Home page is implemented. The Home page is the main page of the app. Inside of it should be a search bar with a button and a table with the results.
 
-* Next step will be implement swr and create the hook for data fetching
+* Next step will be implement swr and create the hook for data fetching.
+
+I needed fetcher function, and hooks.ts file for our custom swr hook.
+
+My fetcher look like this:
+```
+export default function fetcher(url: string, data = undefined) {
+    return fetch(`${url}`, {
+        method: 'GET',
+        body: JSON.stringify(data),
+    }
+    ).then((res) => {
+        if (res.status > 399 && res.status < 200) {
+            throw new Error();
+        }
+        return res.json()
+    }).catch((e) => {
+        throw new Error();
+    })
+}
+```
+
+The hook:
+``` 
+import useSWR from "swr"
+import fetcher from "./fetcher"
+
+export const useRepoSearch  = (query: string) => {
+    const {data, error} = useSWR(`https://api.github.com/search/repositories?${query}`, fetcher)
+    return {
+        data: (data as any) || [],
+        isLoading: !data && !error,
+        isError: error
+    }
+}
+```
+
+
+
 
 
 
