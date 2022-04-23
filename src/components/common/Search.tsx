@@ -1,39 +1,42 @@
 import { Box, Button, Input, InputGroup, InputLeftElement, Text, useColorMode } from "@chakra-ui/react";
-import { FunctionComponent, useMemo, useState} from "react";
+import { FunctionComponent, useEffect, useMemo, useState} from "react";
 import {MdSearch} from 'react-icons/md';
 import { useRepoSearch } from "../../hooks/hooks";
 import CustomTablePaginated from "./CustomTable";
 
 interface SearchProps {
+    searchTermFromURL: string;
 }
  
-const Search: FunctionComponent<SearchProps> = () => {
-    const [searchTerm, setSearchTerm] = useState('');
-    const [query, setQuery] = useState('');
-    const { data, isError, isLoading } = useRepoSearch(query);
-
-    const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setSearchTerm(e.target.value);
-    }
-
-    const handleSubmit = () => {
-        setQuery(`q=${searchTerm}&sort=stars&order=desc&page=1&per_page=100`)
-    }
+const Search: FunctionComponent<SearchProps> = ({searchTermFromURL}) => {
+    const [searchTerm, setSearchTerm] = useState(searchTermFromURL ? `?${searchTermFromURL}` : "");
+    const [query, setQuery] = useState(`q=${searchTerm}&sort=stars&order=desc&page=1&per_page=100`);
+    const [shouldFetch, setShouldFetch] = useState(searchTerm === '' ? false : true);
+    const { data, isError, isLoading } = useRepoSearch(shouldFetch, query);
+    
+    useEffect(() => {
+        const delayDebounceFn = setTimeout(() => {
+            handleSubmit();
+          }, 350)
+      
+          return () => clearTimeout(delayDebounceFn)
+        
+    }, [searchTerm]);
 
     const tableData = useMemo(() => {
         if (data && data.items) {
-        return data.items.map((item: any) => {
-            return {
-                name: item.name,
-                owner: item.owner.login,
-                stars: item.stargazers_count,
-                created_at: item.created_at
+            return data.items.map((item: any) => {
+                return {
+                    name: item.name,
+                    owner: item.owner.login,
+                    stars: item.stargazers_count,
+                    created_at: item.created_at
+                }
+            })} else {
+                return [];
             }
-        })} else {
-            return [];
-        }
         }, [data])
-
+        
     const columns = useMemo(() => [
         {Header: "Name", accessor: "name"},
         {Header: "Owner", accessor: "owner"},
@@ -41,8 +44,18 @@ const Search: FunctionComponent<SearchProps> = () => {
         {Header: "Created At", accessor: "created_at"},
     ], []);
 
-    console.log(tableData);
+    const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setSearchTerm(e.target.value);
+        setQuery(`q=${e.target.value}&sort=stars&order=desc&page=1&per_page=100`)
+        setShouldFetch(false);
+    }
+
+    const handleSubmit = () => {
+        setShouldFetch(true)
+        window.history.replaceState(null, '', `/${searchTerm}`)
+    }
     
+    console.log(data)
     const {colorMode} = useColorMode();
 
     return ( 
@@ -57,43 +70,26 @@ const Search: FunctionComponent<SearchProps> = () => {
                         <Input 
                             type='text' 
                             placeholder='Search Github repositories'
-                            onChange={(e) => handleSearch(e)}
+                            onChange={(e) => handleSearch(e)} onKeyPress={(e) => { e.key === 'Enter' && e.preventDefault(); }}
                         />
-                        <Button 
-                            type="submit" 
-                            bg="green.600" 
-                            isLoading={isLoading}
-                            onClick={(e) => {
-                                e.preventDefault();
-                                handleSubmit();
-                            }}
-                            sx={{
-                                width: "120px",
-                                marginLeft: "20px",
-                                backgroundColor: `${colorMode === "dark" ? "blue.900": "blue.100"}`,
-                                "&:hover": {
-                                    color: "gray.100",
-                                    backgroundColor: "blue.400"
-                                }
-                            }}
-                        >
-                            <Text>Search</Text>
-                        </Button>
                     </InputGroup>
                 </form>
             </Box>
             <Box  marginY="2.6rem" overflowX="auto">
                 {
-                    isError || data.message || data.items.length == 0 ? (
+                    (data.message && !data.errors) && (
+                    <Text>{`${data.message}`}</Text>
+                    )
+                }
+                {
+                    data.items?.length == 0 ? (
                         <Text>
                             {
                              isError && `We apologize for the inconveniences: an error have occurred.`
                             }
+                            
                             {
-                                data.message && data.message
-                            }
-                            {
-                                tableData && `No results found.`
+                                data && `No results found.`
                             }
                         </Text>
                     ) : (

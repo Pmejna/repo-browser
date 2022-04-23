@@ -114,11 +114,56 @@ const tableData = useMemo(() => {
     }
     }, [data])
 ```
-* If there will be an error the Search component should show the message. Else it should show the table.
+* If there will be an error, or no results the Search component should show the message. Else it should show the table.
 
+* The next important feature is to update url address with the query elements.
+In the Home page I added the reactRouter hook and useState: 
+```
+const params = useLocation();
+const [urlParams, setUrlParams] = useState(params.search.substring(1));
+```
+I am passing the urlParams to the Search component as a prop:
 
+```
+<Box >
+    <Search searchTermFromURL={urlParams}/>
+</Box>
+```
 
+Inside of the Search component I initialize the searchTerm with it. This way when page is opened with params in the url it will search
+for the query:
 
+```
+const [searchTerm, setSearchTerm] = useState(searchTermFromURL);
+```
+
+* Now is time to implement the search functionality without a button I removed the SearchButton and I used the debounce function to limit the number of requests to the API.
+The debounce function is firing up in the useEffect hook, triggered by searchTerm. This way the page will load the data in the
+initial load and when the user types something in the search bar it will fire up the debounce function and wait for 350ms.
+My use effect:
+```
+useEffect(() => {
+    const delayDebounceFn = setTimeout(() => {
+        handleSubmit();
+        }, 350)
+    
+        return () => clearTimeout(delayDebounceFn)
+    
+}, [searchTerm]);
+```
+
+* In the meantime I realized that my swr calls are still triggered when the user types the previous query. 
+First I created the SWRConfig wrapper in the index.tsx file. Then based on official swr documentation I created localStorageProvider.
+And implemented that in the SWRConfig. I added two more helpful options to the config:
+
+```
+<SWRConfig value={{ provider: localStorageProvider, revalidateIfStale: false, revalidateOnFocus: false }}>
+    <ColorModeScript initialColorMode={theme.config.initialColorMode} />
+    <App />
+</SWRConfig>
+```
+
+This way the data will be fetched from the localStorage if it is there. And no additional request will be made to the API.
 
 
 
