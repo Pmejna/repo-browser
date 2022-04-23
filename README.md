@@ -14,7 +14,9 @@ I selected the following libraries/dependencies for this project:
 * [chakra-ui](https://chakra-ui.com/) - My main choice for styling, build-in dark/light mode, good selection of components, it use @emotion/core. I am familiar as well with MaterialUI and StyledComponents. But I gave a go this one.
 * [swr](https://swr.now.sh/) - the library I used to help with data fetching from the API. Supports session storage and caching data
 * [react-table](https://react-table.js.org/) - my selection for the table pagination, sorting and filtering. Lot of options, tons of hooks to implement if needed in the future. 
+* [react-icons](https://react-icons.github.io/) - a great icon library to jumpstart the project with. 
 
+This app is a simple project. Some of the libraries might be an overkill, but might be helpful to speed up the development process.
 I believe this is a good project baseline. I might implement Redux if I will find a use for it.
 
 ## How to use this project
@@ -28,4 +30,16 @@ Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
 ## My process journal
 
-This app is a simple project. Some of the libraries might be an overkill, but might be helpful to speed up the development process.
+Down Below is my journal for this project. You can see the process I took, also I would like to justify some of my decisions.
+
+* My first step was to create template layout - it can be easily modified to suit the needs of the project.
+  The layout is set inside of the react Route in App.tsx, thanks to Outlet all children passed down this Route can be rendered within it.
+  It is a simple wrapper consisting of a header with title and dark/light mode button.
+
+* At the moment only Home page is implemented. The Home page is the main page of the app. Inside of it should be a search bar with a button and a table with the results.
+
+* Next step will be implement swr and create the hook for data fetching
+
+
+
+

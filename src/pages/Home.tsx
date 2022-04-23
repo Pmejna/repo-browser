@@ -1,11 +1,8 @@
 import { Box, Text, useColorMode } from "@chakra-ui/react";
 import { FunctionComponent } from "react";
+import Search from "../components/common/Search";
 
-interface HomeProps {
-
-}
- 
-const Home: FunctionComponent<HomeProps> = () => {
+const Home: FunctionComponent = () => {
         
     const {colorMode} = useColorMode();
     return ( 
@@ -28,7 +25,7 @@ const Home: FunctionComponent<HomeProps> = () => {
                 </Text>
             </Box>
             <Box >
-                Search component
+                <Search />
             </Box>
         </Box>
      );
