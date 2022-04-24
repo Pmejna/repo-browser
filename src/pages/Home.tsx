@@ -2,6 +2,7 @@ import { Box, Text, useColorMode } from "@chakra-ui/react";
 import { FunctionComponent, useState } from "react";
 import { useLocation } from "react-router-dom";
 import Search from "../components/common/Search";
+import { formatDate } from "../helpers/formatDate";
 
 const Home: FunctionComponent = () => {
 
@@ -9,6 +10,39 @@ const Home: FunctionComponent = () => {
     const [urlParams] = useState(params.search.substring(1));
         
     const {colorMode} = useColorMode();
+
+    const tableColumns = [
+        {
+            Header: "Name", 
+            accessor: "name"
+        },
+        {
+            Header: "Owner", 
+            accessor: "owner"
+        },
+        {
+            Header: "Stars", 
+            accessor: "stars"
+        },
+        {
+            Header: "Link", 
+            accessor: "link",
+            Cell: (e: any) => <a rel="noreferrer" target="_blank" href={e.value}>Click</a>
+        },
+        {
+            Header: "Created At", 
+            accessor: "created_at"
+        },
+    ];
+
+    const tableRows = (item: any) => ({
+        name: item.name,
+        owner: item.owner.login,
+        stars: item.stargazers_count,
+        created_at: formatDate(item.created_at),
+        link: item.html_url
+    });
+
     return ( 
         <Box marginTop="1rem" paddingX={{sx: "2rem", md: "5rem"}}>
             <Box marginBottom="0.8rem">
@@ -29,7 +63,7 @@ const Home: FunctionComponent = () => {
                 </Text>
             </Box>
             <Box >
-                <Search searchTermFromURL={urlParams}/>
+                <Search searchTermFromURL={urlParams} searchContext="repositories" tableRows={tableRows} tableColumns={tableColumns}/>
             </Box>
         </Box>
      );
