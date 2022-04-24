@@ -2,6 +2,8 @@ import { Box, Flex, Grid, GridItem, IconButton, Text, useColorMode } from "@chak
 import { FunctionComponent, ReactNode } from "react";
 import { MdDarkMode, MdLightMode } from "react-icons/md";
 import { VscGithubInverted } from "react-icons/vsc";
+import { useLocation } from "react-router-dom";
+import MenuButton from "../common/MenuButton";
 
 interface LayoutWrapperProps {
     children: ReactNode
@@ -10,6 +12,8 @@ interface LayoutWrapperProps {
  
 const LayoutWrapper: FunctionComponent<LayoutWrapperProps> = ({children}) => {
     const {colorMode, toggleColorMode} = useColorMode();
+    const {pathname} = useLocation();
+
     return ( 
         <Box>
             <Flex
@@ -30,9 +34,9 @@ const LayoutWrapper: FunctionComponent<LayoutWrapperProps> = ({children}) => {
                     width="100%" 
                     height="100%" 
                     templateColumns={{
-                        sx: "5fr 1fr", 
-                        sm: "4fr 1fr", 
-                        md: "repeat(2, 1fr)"
+                        sx: "2fr 1fr 1fr", 
+                        sm: "4fr 1fr 1fr", 
+                        md: "8fr 1fr 1fr)"
                     }} 
                     alignItems="center">
                     <GridItem >
@@ -45,6 +49,21 @@ const LayoutWrapper: FunctionComponent<LayoutWrapperProps> = ({children}) => {
                             >
                                 RepoBrowser
                             </Text> 
+                        </Flex>
+                    </GridItem>
+                    <GridItem>
+                        <Flex direction="row" justify="end">
+                            {
+                                pathname === "/" ?
+                                <MenuButton 
+                                    link="/users"
+                                    text="Search Users"
+                                />
+                                : <MenuButton 
+                                    link="/"
+                                    text="Search Repos"
+                                />
+                            }
                         </Flex>
                     </GridItem>
                     <GridItem textAlign="end">

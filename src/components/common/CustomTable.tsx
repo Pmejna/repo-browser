@@ -127,10 +127,10 @@ import { tableData } from "../../types/data";
                             {
                             headerGroup.headers.map((column, index) => (
                             <Th 
-                                textAlign={index === 4 ? 'end' : 'start'}
+                                textAlign={index === (columns.length - 1) ? 'end' : 'start'}
                                 fontSize="md" color={"#fff"}
                                 {...column.getHeaderProps(column.getSortByToggleProps())}>
-                                <Flex justifyContent={index === 4 ? 'flex-end' : 'flex-start'}>
+                                <Flex justifyContent={index === (columns.length - 1) ? 'flex-end' : 'flex-start'}>
                                 {column.render("Header")}
                                 {column.isSorted ? (
                                     column.isSortedDesc ? (
@@ -154,7 +154,7 @@ import { tableData } from "../../types/data";
                             <Tr {...row.getRowProps()}>
                             {row.cells.map((cell, index) => {
                                 return (
-                                <Td textAlign={index === 4 ? 'end' : 'start'}{...cell.getCellProps()}>{cell.render("Cell")}</Td>
+                                <Td textAlign={index === (columns.length - 1) ? 'end' : 'start'}{...cell.getCellProps()}>{cell.render("Cell")}</Td>
                                 );
                             })}
                             </Tr>
