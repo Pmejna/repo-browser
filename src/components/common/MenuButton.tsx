@@ -1,4 +1,4 @@
-import { Button, useColorMode } from "@chakra-ui/react";
+import { Button, useColorMode, Text } from "@chakra-ui/react";
 import { FunctionComponent } from "react";
 import { Link } from "react-router-dom";
 
@@ -25,6 +25,10 @@ const MenuButton: FunctionComponent<MenuButtonProps> = (props) => {
                     padding: '8px 20px',
                 }}
             >
+                <Text as="span" display={{
+                    sx: "none",
+                    md: "block"
+                }}>Search</Text>
                 {props.text}
             </Button>
         </Link>
