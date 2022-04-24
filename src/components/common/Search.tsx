@@ -9,11 +9,12 @@ import CustomTablePaginated from "./CustomTable";
 interface SearchProps {
     searchTermFromURL: string;
     searchContext: string;
+    currentLocation: string;
     tableColumns: any;
     tableRows: any;
 }
  
-const Search: FunctionComponent<SearchProps> = ({searchTermFromURL, searchContext, tableColumns, tableRows}) => {
+const Search: FunctionComponent<SearchProps> = ({searchTermFromURL, searchContext, currentLocation, tableColumns, tableRows}) => {
     const [searchTerm, setSearchTerm] = useState(searchTermFromURL ? `?${searchTermFromURL}` : "");
     const [query, setQuery] = useState(`q=${searchTerm}&sort=stars&order=desc&page=1&per_page=100`);
     const [shouldFetch, setShouldFetch] = useState(false);
@@ -23,7 +24,7 @@ const Search: FunctionComponent<SearchProps> = ({searchTermFromURL, searchContex
     const memoizedHandleSubmit = useCallback(
         () => {
             setShouldFetch(true)
-            window.history.replaceState(null, '', `/${searchTerm}`)
+            window.history.replaceState(null, '', `${currentLocation}${searchTerm}`)
         },
         [searchTerm],
       );

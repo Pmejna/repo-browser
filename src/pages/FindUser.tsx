@@ -1,47 +1,48 @@
-import { Box } from "@chakra-ui/react";
+import { Avatar, Box, WrapItem } from "@chakra-ui/react";
 import { FunctionComponent, useState } from "react";
 import { useLocation } from "react-router-dom";
 import Search from "../components/common/Search";
 import SearchHeader from "../components/common/SearchHeader";
 import { formatDate } from "../helpers/formatDate";
 
-const Home: FunctionComponent = () => {
+interface FindUserProps {
+    
+}
+ 
+const FindUser: FunctionComponent<FindUserProps> = () => {
 
     const {pathname, search} = useLocation();
-
     const [urlParams] = useState(search.substring(1));
-        
+
+    // const customAvatar = (url: string) => {
+    //     return (
+    //         <WrapItem>
+    //             <Avatar size='2xs' src={url} />
+    //         </WrapItem>
+    //     )
+    // }
 
     const tableColumns = [
         {
-            Header: "Name", 
-            accessor: "name"
+            Header: "Avatar", 
+            accessor: "avatar",
+            Cell: (e: any) => (<Avatar size='2xl' src={e.value} />)
         },
         {
-            Header: "Owner", 
-            accessor: "owner"
+            Header: "User Login", 
+            accessor: "user"
         },
         {
-            Header: "Stars", 
-            accessor: "stars"
-        },
-        {
-            Header: "Link", 
+            Header: "User Github", 
             accessor: "link",
             Cell: (e: any) => <a rel="noreferrer" target="_blank" href={e.value}>Click</a>
-        },
-        {
-            Header: "Created At", 
-            accessor: "created_at"
         },
     ];
 
     const tableRows = (item: any) => ({
-        name: item.name,
-        owner: item.owner.login,
-        stars: item.stargazers_count,
-        created_at: formatDate(item.created_at),
-        link: item.html_url
+        avatar: item.avatar_url,
+        user: item.login,
+        link: item.url
     });
 
     return ( 
@@ -53,7 +54,7 @@ const Home: FunctionComponent = () => {
                 />
                 <Search 
                     searchTermFromURL={urlParams} 
-                    searchContext="repositories" 
+                    searchContext="users" 
                     currentLocation={pathname}
                     tableRows={tableRows} 
                     tableColumns={tableColumns}
@@ -63,4 +64,4 @@ const Home: FunctionComponent = () => {
      );
 }
  
-export default Home;
+export default FindUser;

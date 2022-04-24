@@ -8,6 +8,7 @@ import {
 } from 'react-router-dom';
 import LayoutWrapper from './components/layout/LayoutWrapper';
 import Home from './pages/Home';
+import FindUser from './pages/FindUser';
 
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
             <Route path="/">
               <Route element={<LayoutWrapper><Outlet /></LayoutWrapper>} path="/">
                 <Route index element={<Home />} />
+                <Route path="/users" element={<FindUser />} />
               </Route>
             </Route>
           </Routes>

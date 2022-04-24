@@ -2,6 +2,7 @@ import { Box, Flex, Grid, GridItem, IconButton, Text, useColorMode } from "@chak
 import { FunctionComponent, ReactNode } from "react";
 import { MdDarkMode, MdLightMode } from "react-icons/md";
 import { VscGithubInverted } from "react-icons/vsc";
+import { Link } from "react-router-dom";
 
 interface LayoutWrapperProps {
     children: ReactNode
@@ -30,9 +31,9 @@ const LayoutWrapper: FunctionComponent<LayoutWrapperProps> = ({children}) => {
                     width="100%" 
                     height="100%" 
                     templateColumns={{
-                        sx: "5fr 1fr", 
-                        sm: "4fr 1fr", 
-                        md: "repeat(2, 1fr)"
+                        sx: "2fr 1fr 1fr", 
+                        sm: "4fr 1fr 1fr", 
+                        md: "8fr 1fr 1fr)"
                     }} 
                     alignItems="center">
                     <GridItem >
@@ -45,6 +46,11 @@ const LayoutWrapper: FunctionComponent<LayoutWrapperProps> = ({children}) => {
                             >
                                 RepoBrowser
                             </Text> 
+                        </Flex>
+                    </GridItem>
+                    <GridItem>
+                        <Flex direction="row" justify="end">
+                            <Link to="/users">Search Users</Link>
                         </Flex>
                     </GridItem>
                     <GridItem textAlign="end">
