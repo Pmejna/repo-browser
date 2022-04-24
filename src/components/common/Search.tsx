@@ -26,7 +26,7 @@ const Search: FunctionComponent<SearchProps> = ({searchTermFromURL, searchContex
             setShouldFetch(true)
             window.history.replaceState(null, '', `${currentLocation}${searchTerm}`)
         },
-        [searchTerm],
+        [searchTerm, currentLocation],
       );
 
     const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -50,15 +50,9 @@ const Search: FunctionComponent<SearchProps> = ({searchTermFromURL, searchContex
           return () => clearTimeout(delayDebounceFn)
     }, [searchTerm, memoizedHandleSubmit]);
 
-
-
-    
-
     const tableKeys = (data: any, obj: any) => {
         return data.items.map((item: any) => obj(item));   
     }
-
-
 
     const tableDataMemoized = useMemo(() => {
         if (data && data.items) {
@@ -66,9 +60,9 @@ const Search: FunctionComponent<SearchProps> = ({searchTermFromURL, searchContex
         } else {
                 return [];
             }
-        }, [data])
+        }, [data, tableRows])
         
-    const columns = useMemo(() => tableColumns, []);
+    const columns = useMemo(() => tableColumns, [tableColumns]);
 
     console.log(data, 'dds')
     

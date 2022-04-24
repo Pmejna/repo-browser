@@ -2,7 +2,8 @@ import { Box, Flex, Grid, GridItem, IconButton, Text, useColorMode } from "@chak
 import { FunctionComponent, ReactNode } from "react";
 import { MdDarkMode, MdLightMode } from "react-icons/md";
 import { VscGithubInverted } from "react-icons/vsc";
-import { Link } from "react-router-dom";
+import { useLocation } from "react-router-dom";
+import MenuButton from "../common/MenuButton";
 
 interface LayoutWrapperProps {
     children: ReactNode
@@ -11,6 +12,8 @@ interface LayoutWrapperProps {
  
 const LayoutWrapper: FunctionComponent<LayoutWrapperProps> = ({children}) => {
     const {colorMode, toggleColorMode} = useColorMode();
+    const {pathname} = useLocation();
+
     return ( 
         <Box>
             <Flex
@@ -50,7 +53,17 @@ const LayoutWrapper: FunctionComponent<LayoutWrapperProps> = ({children}) => {
                     </GridItem>
                     <GridItem>
                         <Flex direction="row" justify="end">
-                            <Link to="/users">Search Users</Link>
+                            {
+                                pathname === "/" ?
+                                <MenuButton 
+                                    link="/users"
+                                    text="Search Users"
+                                />
+                                : <MenuButton 
+                                    link="/"
+                                    text="Search Repos"
+                                />
+                            }
                         </Flex>
                     </GridItem>
                     <GridItem textAlign="end">
