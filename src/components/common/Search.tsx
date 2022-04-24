@@ -4,28 +4,29 @@ import {MdSearch} from 'react-icons/md';
 import { TiDelete } from "react-icons/ti";
 import { useRepoSearch } from "../../hooks/hooks";
 import CustomTablePaginated from "./CustomTable";
-import dayjs from "dayjs";
-import customParseFormat from 'dayjs/plugin/customParseFormat'
-import { tableData } from "../../types/data";
 
 
 interface SearchProps {
     searchTermFromURL: string;
+    searchContext: string;
+    currentLocation: string;
+    tableColumns: any;
+    tableRows: any;
 }
  
-const Search: FunctionComponent<SearchProps> = ({searchTermFromURL}) => {
+const Search: FunctionComponent<SearchProps> = ({searchTermFromURL, searchContext, currentLocation, tableColumns, tableRows}) => {
     const [searchTerm, setSearchTerm] = useState(searchTermFromURL ? `?${searchTermFromURL}` : "");
     const [query, setQuery] = useState(`q=${searchTerm}&sort=stars&order=desc&page=1&per_page=100`);
     const [shouldFetch, setShouldFetch] = useState(false);
-    const { data, isError, isLoading } = useRepoSearch(shouldFetch, query);
+    const { data, isError, isLoading } = useRepoSearch(shouldFetch, query, searchContext);
     let inputRef = useRef() as React.MutableRefObject<HTMLInputElement>;
 
     const memoizedHandleSubmit = useCallback(
         () => {
             setShouldFetch(true)
-            window.history.replaceState(null, '', `/${searchTerm}`)
+            window.history.replaceState(null, '', `${currentLocation}${searchTerm}`)
         },
-        [searchTerm],
+        [searchTerm, currentLocation],
       );
 
     const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -41,12 +42,6 @@ const Search: FunctionComponent<SearchProps> = ({searchTermFromURL}) => {
         setQuery(``)
     }
 
-    
-    dayjs.extend(customParseFormat);
-    const formatDate = (date: string) => {
-        return dayjs(`${date}`).format('DD-MM-YYYY');
-    }
-
     useEffect(() => {
         const delayDebounceFn = setTimeout(() => {
             memoizedHandleSubmit();
@@ -55,44 +50,19 @@ const Search: FunctionComponent<SearchProps> = ({searchTermFromURL}) => {
           return () => clearTimeout(delayDebounceFn)
     }, [searchTerm, memoizedHandleSubmit]);
 
-    const tableData = useMemo(() => {
+    const tableKeys = (data: any, obj: any) => {
+        return data.items.map((item: any) => obj(item));   
+    }
+
+    const tableDataMemoized = useMemo(() => {
         if (data && data.items) {
-            return data.items.map((item: any): tableData => {
-                return {
-                    name: item.name,
-                    owner: item.owner.login,
-                    stars: item.stargazers_count,
-                    created_at: formatDate(item.created_at),
-                    link: item.html_url
-                }
-            })} else {
+            return tableKeys(data, tableRows); 
+        } else {
                 return [];
             }
-        }, [data])
+        }, [data, tableRows])
         
-    const columns = useMemo(() => [
-        {
-            Header: "Name", 
-            accessor: "name"
-        },
-        {
-            Header: "Owner", 
-            accessor: "owner"
-        },
-        {
-            Header: "Stars", 
-            accessor: "stars"
-        },
-        {
-            Header: "Link", 
-            accessor: "link",
-            Cell: (e: any) => <a rel="noreferrer" target="_blank" href={e.value}>Click</a>
-        },
-        {
-            Header: "Created At", 
-            accessor: "created_at"
-        },
-    ], []);
+    const columns = useMemo(() => tableColumns, [tableColumns]);
 
     console.log(data, 'dds')
     
@@ -140,7 +110,7 @@ const Search: FunctionComponent<SearchProps> = ({searchTermFromURL}) => {
                         </Text>
                     ) : (
                         <CustomTablePaginated 
-                            data={tableData} 
+                            data={tableDataMemoized} 
                             isLoading={isLoading} 
                             columns={columns} 
                             numberOfItems={data.total_count}
