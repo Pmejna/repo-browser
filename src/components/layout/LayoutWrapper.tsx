@@ -34,7 +34,7 @@ const LayoutWrapper: FunctionComponent<LayoutWrapperProps> = ({children}) => {
                     width="100%" 
                     height="100%" 
                     templateColumns={{
-                        sx: "2fr 1fr 1fr", 
+                        sx: "1fr 1fr 0.5fr", 
                         sm: "4fr 1fr 1fr", 
                         md: "8fr 1fr 1fr)"
                     }} 
@@ -57,11 +57,11 @@ const LayoutWrapper: FunctionComponent<LayoutWrapperProps> = ({children}) => {
                                 pathname === "/" ?
                                 <MenuButton 
                                     link="/users"
-                                    text="Search Users"
+                                    text="Users"
                                 />
                                 : <MenuButton 
                                     link="/"
-                                    text="Search Repos"
+                                    text="Repos"
                                 />
                             }
                         </Flex>
