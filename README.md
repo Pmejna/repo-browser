@@ -1,5 +1,6 @@
 # Simple Github Repository Browser
 This project is (as the title suggests) a simple Github Repository Browser.
+Currently support username search as well.
 I have used create-react-app to start this project. Currently it install the version 18.0.0 of React.
 The first thing I did was to step down to the version 17.0.2. The reason for this is that I am aware
 of some incompatibilities between many libraries/dependencies with react v 18.0.0. To avoid further issues
@@ -179,6 +180,13 @@ This way the data will be fetched from the localStorage if it is there. And no a
 Another thing to improve the UX was to add the delete button to the input field on the right side.
 
 * I added the global styles to the theme, changed scrollbar look, and added custom faicon.
+
+* The App had one important issue - hardcoded data inside of a Search component. This way the component was not reusable.
+I needed to refactor the code and move the data outside. The data will be held in the specific page component. In the future
+i might create an initial global state with starter data of each route to inject it based on the current location.
+
+* I created also reusable SearchHeader, added buttons to navbar and toggle based on current location.
+* I created SearchUser page, added the data.
 
 * At this point there is one important feature to implement: adding the sorting params to the url. And consuming them in the Search component. 
 In the end I din't find the use for Redux or other state management. If the app grow and will need more features I might consider
