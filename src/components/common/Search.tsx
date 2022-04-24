@@ -64,8 +64,6 @@ const Search: FunctionComponent<SearchProps> = ({searchTermFromURL, searchContex
         
     const columns = useMemo(() => tableColumns, [tableColumns]);
 
-    console.log(data, 'dds')
-    
     return ( 
         <Box>
             <Box>

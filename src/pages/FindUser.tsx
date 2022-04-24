@@ -33,7 +33,7 @@ const FindUser: FunctionComponent<FindUserProps> = () => {
     const tableRows = (item: any) => ({
         avatar: item.avatar_url,
         user: item.login,
-        link: item.url
+        link: item.html_url
     });
 
     return ( 
